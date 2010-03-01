@@ -13,6 +13,17 @@ MD5SUM	 = md5sum
 FAKEROOT = fakeroot
 endif
 
+.PHONY: qemu
+qemu: toolchain rootfs qemu-armv7
+
+.PHONY: qemu-%
+qemu-%: staging/mapping-% 
+	for f in `find packages -mindepth 1 -maxdepth 1 -name qemu -type d -print` ; do \
+	  if [ -e $$f/Makefile ]; then \
+	    ${MAKE} -C $$f ARCH=$* stage || exit ; \
+	  fi; \
+	done
+
 .PHONY: all
 all: toolchain rootfs stage
 
