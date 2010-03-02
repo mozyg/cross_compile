@@ -1,5 +1,5 @@
 NAME = qemu
-VERSION = master
+VERSION = stable
 DEPENDS = zlib ncurses
 SRC_GIT = git@wdtz.org:/qemu.git
 
@@ -10,8 +10,8 @@ unpack: build/.unpacked
 
 build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.gz
 	rm -rf build
-	mkdir -p build/src
-	tar -C build/src -z -x -f $<
+	mkdir -p build/qemu
+	tar -C build/qemu -z -x -f $<
 	touch $@
 
 include ../../support/staging.mk
@@ -25,7 +25,7 @@ include ../../support/cross-compile.mk
 
 build/%.built: build/.unpacked
 	rm -f $@
-	( cd build/src ; ${SB2} ./build.sh )	
+	( cd build/qemu ; ${SB2} ./build.sh )	
 	touch $@
 
 clobber::

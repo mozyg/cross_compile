@@ -83,8 +83,10 @@ ifndef NAME
 PREWARE_SANITY += $(error "Please define NAME in your Makefile")
 endif
 
-ifeq "$(VERSION)" "master"
-GIT_VERSION=
+#NOTE(shivaram): HACK to download the stable branch for qemu-git.
+#Find a better way to fix this.
+ifeq "$(VERSION)" "stable"
+GIT_VERSION="origin/stable"
 else
 GIT_VERSION="v"$(VERSION)
 endif

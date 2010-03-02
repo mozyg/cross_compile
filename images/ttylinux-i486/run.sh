@@ -3,5 +3,6 @@
 #http://minimalinux.org/ttylinux
 
 QEMU_BIN=/usr/bin/qemu
+DIR_PREFIX=.
 
-$QEMU_BIN -cdrom ttylinux-i486/bootcd-i486-9.1.iso -boot d
+$QEMU_BIN -cdrom ./bootcd-i486-9.1.iso -boot d
