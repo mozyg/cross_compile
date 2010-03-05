@@ -86,7 +86,7 @@ endif
 #NOTE(shivaram): HACK to download the stable branch for qemu-git.
 #Find a better way to fix this.
 ifeq "$(VERSION)" "stable"
-GIT_VERSION="origin/stable"
+GIT_VERSION=-b $(VERSION) origin/$(VERSION)
 else
 GIT_VERSION="v"$(VERSION)
 endif
