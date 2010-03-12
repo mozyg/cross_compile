@@ -30,6 +30,8 @@ build/%.built: build/.unpacked
 	install -d ${STAGING_DIR}/usr/include
 	install -m 644 build/src/zlib.h ${STAGING_DIR}/usr/include/
 	install -m 644 build/src/zconf.h ${STAGING_DIR}/usr/include/
+	( cd build/src ; ${SB2} make)
+	install -m 755 build/src/libz.a ${STAGING_DIR}/usr/lib/
 	touch $@
 
 clobber::
