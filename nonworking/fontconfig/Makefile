@@ -30,8 +30,12 @@ build/%.built: build/.unpacked
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
 	./autogen.sh \
-		--prefix=${INSTALL_PREFIX} --sysconfdir=/etc \
+		--prefix=${INSTALL_PREFIX} --sysconfdir=/usr/local/share \
+		--host=i386 --build=arm --with-arch=arm \
 	)	
+	#XXX the libtool which ships with fontconfig generates wierd errors
+	# Using the one from scratchbox works fine right now
+	( cd build/src ; ${SB2} cp \`which libtool\` .)
 	( cd build/src ; ${SB2} make)
 	( cd build/src ; ${SB2} make install)
 	touch $@
