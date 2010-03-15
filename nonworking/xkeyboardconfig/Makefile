@@ -1,18 +1,17 @@
 NAME = xkeyboard-config
-VERSION = 1.7
+VERSION = 1.7-1
 
-SRC_BZ2 = http://xlibs.freedesktop.org/xkbdesc/${NAME}-${VERSION}.tar.bz2
+SRC_GIT=git://git.webos-internals.org/x11/xkeyboard-config.git
 
 include ../../support/download.mk
 
 .PHONY: unpack
 unpack: build/.unpacked
 
-build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.bz2
+build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.gz
 	rm -rf build
-	mkdir -p build
-	tar -C build -j -x -f $<
-	mv build/${NAME}-${VERSION} build/src
+	mkdir -p build/src
+	tar -C build/src -z -x -f $<
 	touch $@
 
 include ../../support/staging.mk
@@ -26,7 +25,7 @@ build: build/armv7.built
 build/%.built: build/.unpacked
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
-	./configure \
+	./autogen.sh \
 		--prefix=${INSTALL_PREFIX} \
 	)
 	( cd build/src ; ${SB2} make)
