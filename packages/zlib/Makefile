@@ -25,12 +25,15 @@ include ../../support/stage-rootfs.mk
 
 stage:: build/armv7.built
 
+#The 'CC=arm-none-linux-gnueabi-gcc' part of the make invocation below should NOT be required.
+#I'm not sure why it is, even CC=gcc doesn't work (despite 'gcc' from within sb2 being properly
+#mapped to arm-none-linux-gnueabi-gcc.  Leaving alone for now, but NOTE this isn't ideal/clean
 build/%.built: build/.unpacked
 	rm -f $@
 	install -d ${STAGING_DIR}/usr/include
 	install -m 644 build/src/zlib.h ${STAGING_DIR}/usr/include/
 	install -m 644 build/src/zconf.h ${STAGING_DIR}/usr/include/
-	( cd build/src ; ${SB2} make)
+	( cd build/src ; ${SB2} make CC=arm-none-linux-gnueabi-gcc)
 	install -m 755 build/src/libz.a ${STAGING_DIR}/usr/lib/
 	touch $@
 
