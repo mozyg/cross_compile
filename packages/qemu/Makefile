@@ -1,7 +1,7 @@
 NAME = qemu
 VERSION = stable
 DEPENDS = zlib ncurses
-SRC_GIT = git@wdtz.org:/qemu.git
+SRC_GIT = git@wdtz.org:cs523/qemu.git
 
 include ../../support/download.mk
 
