@@ -1,5 +1,5 @@
-NAME = gtk+
-VERSION = 2.12.11
+NAME = xterm
+VERSION = 256
 
 DEPENDS = ../nonworking/pango \
 		  ../nonworking/libx11 \
@@ -7,19 +7,21 @@ DEPENDS = ../nonworking/pango \
 		  ../nonworking/libsm \
 		  ../nonworking/libXext \
 		  ../nonworking/libXrender \
-		  glib-2.0
+		  ../nonworking/libXaw \
+		  glib-2.0 \
+		  ncurses
 
-SRC_BZ2 = http://ftp.acc.umu.se/pub/gnome/sources/gtk+/2.12/${NAME}-${VERSION}.tar.bz2
+SRC_TGZ = ftp://invisible-island.net/${NAME}/${NAME}-${VERSION}.tgz
 
 include ../../support/download.mk
 
 .PHONY: unpack
 unpack: build/.unpacked
 
-build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.bz2
+build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.gz
 	rm -rf build
 	mkdir -p build
-	tar -C build -j -x -f $<
+	tar -C build -z -x -f $<
 	mv build/${NAME}-${VERSION} build/src
 	touch $@
 
@@ -35,12 +37,14 @@ build/%.built: build/.unpacked
 	rm -f $@
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
+	CFLAGS=\"-O2 -I/usr/local/include -I/usr/local/include/ncurses\" \
 	LDFLAGS="\"-L/usr/local/lib -Wl,-rpath-link,/usr/local/lib -Wl,-rpath,/usr/local/lib\" PATH=/usr/local/bin:${PATH}" \
 	./configure \
 		--prefix=${INSTALL_PREFIX} \
-		--without-libtiff \
-		--without-libjpeg \
-		--disable-cups \
+		--enable-88-color \
+		--enable-256-color \
+		--enable-width-chars \
+		--enable-luit \
 	)	
 	( cd build/src ; ${SB2} make)
 	( cd build/src ; ${SB2} make install)

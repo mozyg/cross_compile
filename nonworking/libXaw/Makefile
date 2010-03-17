@@ -1,15 +1,13 @@
-NAME = gtk+
-VERSION = 2.12.11
+NAME = libXaw
+VERSION = 1.0.7
 
-DEPENDS = ../nonworking/pango \
-		  ../nonworking/libx11 \
-		  ../nonworking/libice \
-		  ../nonworking/libsm \
-		  ../nonworking/libXext \
-		  ../nonworking/libXrender \
-		  glib-2.0
+DEPENDS = \
+		../nonworking/xorg-server \
+		../nonworking/libxt \
+		../nonworking/libXmu \
+		../nonworking/libXpm
 
-SRC_BZ2 = http://ftp.acc.umu.se/pub/gnome/sources/gtk+/2.12/${NAME}-${VERSION}.tar.bz2
+SRC_BZ2 = http://www.x.org/releases/X11R7.5/src/everything/${NAME}-${VERSION}.tar.bz2
 
 include ../../support/download.mk
 
@@ -35,15 +33,11 @@ build/%.built: build/.unpacked
 	rm -f $@
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
-	LDFLAGS="\"-L/usr/local/lib -Wl,-rpath-link,/usr/local/lib -Wl,-rpath,/usr/local/lib\" PATH=/usr/local/bin:${PATH}" \
 	./configure \
 		--prefix=${INSTALL_PREFIX} \
-		--without-libtiff \
-		--without-libjpeg \
-		--disable-cups \
-	)	
+	)
 	( cd build/src ; ${SB2} make)
-	( cd build/src ; ${SB2} make install)
+	( cd build/src ; ${SB2} make install )
 	touch $@
 
 clobber::
