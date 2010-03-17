@@ -1,9 +1,7 @@
-NAME = libxcb
-VERSION = 1.5
+NAME = libXrender
+VERSION = 0.9.5
 
-DEPENDS = ../nonworking/xcbproto ../nonworking/libpthread-stubs ../nonworking/xau
-
-SRC_BZ2 = http://xcb.freedesktop.org/dist/${NAME}-${VERSION}.tar.bz2
+SRC_BZ2 = http://www.x.org/releases/X11R7.5/src/everything/${NAME}-${VERSION}.tar.bz2
 
 include ../../support/download.mk
 
@@ -15,7 +13,6 @@ build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.bz2
 	mkdir -p build
 	tar -C build -j -x -f $<
 	mv build/${NAME}-${VERSION} build/src
-	sed -i s/src\ tests\ doc/src\ tests/g build/src/Makefile.in
 	touch $@
 
 include ../../support/staging.mk
@@ -32,10 +29,9 @@ build/%.built: build/.unpacked
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
 	./configure \
 		--prefix=${INSTALL_PREFIX} \
-		--disable-build-docs \
-	)
+	)	
 	( cd build/src ; ${SB2} make)
-	( cd build/src ; ${SB2} make install )
+	( cd build/src ; ${SB2} make install)
 	touch $@
 
 clobber::

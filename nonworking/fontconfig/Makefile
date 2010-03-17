@@ -1,9 +1,9 @@
-NAME = libxcb
-VERSION = 1.5
+NAME = fontconfig
+VERSION = 2.8.0
 
-DEPENDS = ../nonworking/xcbproto ../nonworking/libpthread-stubs ../nonworking/xau
+DEPENDS = libxml2
 
-SRC_BZ2 = http://xcb.freedesktop.org/dist/${NAME}-${VERSION}.tar.bz2
+SRC_BZ2 = http://cgit.freedesktop.org/fontconfig/snapshot/fontconfig-2.8.0.tar.bz2
 
 include ../../support/download.mk
 
@@ -15,7 +15,6 @@ build/.unpacked: ${DL_DIR}/${NAME}-${VERSION}.tar.bz2
 	mkdir -p build
 	tar -C build -j -x -f $<
 	mv build/${NAME}-${VERSION} build/src
-	sed -i s/src\ tests\ doc/src\ tests/g build/src/Makefile.in
 	touch $@
 
 include ../../support/staging.mk
@@ -30,12 +29,15 @@ build/%.built: build/.unpacked
 	rm -f $@
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
-	./configure \
-		--prefix=${INSTALL_PREFIX} \
-		--disable-build-docs \
-	)
+	./autogen.sh \
+		--prefix=${INSTALL_PREFIX} --sysconfdir=/usr/local/share \
+		--host=i386 --build=arm --with-arch=arm \
+	)	
+	#XXX the libtool which ships with fontconfig generates wierd errors
+	# Using the one from scratchbox works fine right now
+	( cd build/src ; ${SB2} cp \`which libtool\` .)
 	( cd build/src ; ${SB2} make)
-	( cd build/src ; ${SB2} make install )
+	( cd build/src ; ${SB2} make install)
 	touch $@
 
 clobber::
