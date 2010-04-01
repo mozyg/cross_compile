@@ -1,9 +1,9 @@
 NAME    = navit
-VERSION = 0.1.1
-DEPENDS = jpeg libpng12 freetype fontconfig libsdl ../nonworking/pdl
+VERSION = 0.2.0
+DEPENDS = jpeg libpng12 freetype fontconfig libsdl libsdl-image ../nonworking/pdl
 SVN_URL = https://navit.svn.sourceforge.net/svnroot/navit/trunk
 APP_DIR = /media/cryptofs/apps/usr/palm/applications/org.webosinternals.navit
-REVISION= 2914
+REVISION= 3099
 
 .PHONY: unpack
 unpack: build/.unpacked
@@ -37,6 +37,7 @@ build/.patched:
 	$(foreach patchfile, $(shell ls patches), \
 		patch -p0 build/src/`echo ${patchfile} | sed 's#__#/#g'` < patches/$(patchfile); \
 	)
+	cp navit.xml build/src/navit/
 	touch $@
 
 build/.configured: build/.aclocal
@@ -64,6 +65,11 @@ build/%.built: build/.unpacked build/.patched build/.configured
 	( cd build/src ; ${SB2} cp `which libtool` . )
 	( cd build/src/navit/xpm/ ; make )
 	( cd build/src ; ${SB2} make && ${SB2} make install )
+	${SB2} cp files/appinfo.json ${APP_DIR}/appinfo.json
+	${SB2} cp files/Icon.png ${APP_DIR}/Icon.png
+	${SB2} cp files/navit.sh ${APP_DIR}/navit.sh
+	${SB2} cp files/navit.xml ${APP_DIR}/navit.xml.dist
+	${SB2} cp files/osd_*.png ${APP_DIR}/share/navit/xpm/
 	touch $@
 
 clean:

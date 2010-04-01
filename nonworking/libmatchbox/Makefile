@@ -1,10 +1,9 @@
-NAME = xkbcomp
-VERSION = 1.1.1
+NAME = libmatchbox
+VERSION = 1.9
 
-SRC_BZ2 = http://www.x.org/releases/X11R7.5/src/everything/${NAME}-${VERSION}.tar.bz2
+DEPENDS = libpng12 freetype 
 
-APP_DIR = /media/cryptofs/apps/usr/palm/applications/org.webosinternals.xorg-server
-XLIBS = /media/cryptofs/apps/usr/palm/applications/org.webosinternals.xlib
+SRC_BZ2 = http://matchbox-project.org/sources/${NAME}/${VERSION}/${NAME}-${VERSION}.tar.bz2
 
 include ../../support/download.mk
 
@@ -27,14 +26,15 @@ include ../../support/cross-compile.mk
 build: build/armv7.built
 
 build/%.built: build/.unpacked
+	rm -f $@
 	( cd build/src ; ${SB2} \
 	PKG_CONFIG_LIBDIR=/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig \
-	LDFLAGS=\"-L/usr/local/lib -Wl,-rpath=${XLIBS}:.:/usr/local/lib\" \
+	LDFLAGS="\"-L/usr/local/lib -Wl,-rpath-link,/usr/local/lib -Wl,-rpath,/usr/local/lib\" PATH=/usr/local/bin:${PATH}" \
 	./configure \
-		--prefix=${APP_DIR} \
-	)
+		--prefix=${INSTALL_PREFIX} \
+	)	
 	( cd build/src ; ${SB2} make)
-	#( cd build/src ; ${SB2} make install )
+	( cd build/src ; ${SB2} make install)
 	touch $@
 
 clobber::
